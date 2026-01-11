@@ -10,8 +10,8 @@
 ## Function
 Starter project which starts WiFi and Lvgl v9.4.
 
-### See
-[uniFiWebHook](https://github.com/skoona/uniFiWebHook)
-[uniFiHomebridge](https://github.com/skoona/uniFiHomebridge)
+### See Also
+    [uniFiWebHook](https://github.com/skoona/uniFiWebHook)
+    [uniFiHomebridge](https://github.com/skoona/uniFiHomebridge)
 
 Author: skoona@gmail.com
