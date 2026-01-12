@@ -191,7 +191,7 @@ esp_err_t skn_lcd_init() {
 				CONFIG_LCD_D15_GPIO,
 			},
 		.bus_width = CONFIG_LCD_BUS_WIDTH,
-		.max_transfer_bytes = SKN_TRANSFER_BUFF_SZ,
+		.max_transfer_bytes = (CONFIG_LCD_V_RES * 40 * sizeof(uint16_t)),
 		.psram_trans_align = 0,
 		.sram_trans_align = 0,
 	};
@@ -230,7 +230,7 @@ esp_err_t skn_lcd_init() {
 		.bits_per_pixel = CONFIG_LCD_BUS_WIDTH,
 	};
 	esp_err_t ret = esp_lcd_new_panel_ili9488(
-		io_handle, &panel_config, SKN_I80_COLOR_BUFF_SZ, &lcd_panel);
+		io_handle, &panel_config, (CONFIG_LCD_V_RES * 20 * sizeof(lv_color_t)), &lcd_panel);
 
 	esp_lcd_panel_reset(lcd_panel);
 	esp_lcd_panel_init(lcd_panel);
@@ -260,17 +260,16 @@ esp_err_t skn_lvgl_init() {
 	printf("Color Sz: %d\tlv_color_t: %d\tDraw buffer: %'.0u\tTransfer "
 		   "buffer: %'.0u\tPixel Cnt: %'.0u\n",
 		   lv_color_format_get_size(lv_display_get_color_format(display)),
-		   sizeof(lv_color_t), SKN_DRAW_BUFF_SZ, SKN_TRANSFER_BUFF_SZ,
+		   sizeof(lv_color_t), (CONFIG_LCD_V_RES * 20 * sizeof(lv_color_t)), SKN_TRANSFER_BUFF_SZ,
 		   SKN_I80_PIXELS_CNT);
 
 	uint8_t *buf1 =
-		heap_caps_malloc(SKN_DRAW_BUFF_SZ, MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
+		heap_caps_malloc((CONFIG_LCD_V_RES * 20 * sizeof(lv_color_t)), MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
 	assert(buf1);
 	uint8_t *buf2 =
-		heap_caps_malloc(SKN_DRAW_BUFF_SZ, MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
+		heap_caps_malloc((CONFIG_LCD_V_RES * 20 * sizeof(lv_color_t)), MALLOC_CAP_DMA | MALLOC_CAP_32BIT);
 	assert(buf2);
-	lv_display_set_buffers(display, buf1, buf2, SKN_DRAW_BUFF_SZ,
-						   LV_DISPLAY_RENDER_MODE_PARTIAL);
+	lv_display_set_buffers(display, buf1, buf2, (CONFIG_LCD_V_RES * 20), LV_DISPLAY_RENDER_MODE_PARTIAL);
 
 	lv_display_set_flush_cb(display, skn_lvgl_flush_cb);
 	lv_display_set_user_data(display, lcd_panel);
